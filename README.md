@@ -25,5 +25,5 @@ Architecture de l’application:
 MVC
 
 Frameworks:
-Bootstrap 3
+Bootstrap 3,
 jQuery 1.10.2
