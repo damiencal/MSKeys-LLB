@@ -68,8 +68,6 @@
         <p>© LLB 2013</p>
       </footer>
     </div> <!-- /container -->
-
-
     <!--Bootstrap core JavaScript-->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
