@@ -62,11 +62,8 @@
         <p><a class="btn btn-primary btn-lg">Learn more »</a></p>
       </div>
     </div>
-
     <div class="container">
-
       <hr>
-
       <footer>
         <p>© LLB 2013</p>
       </footer>
