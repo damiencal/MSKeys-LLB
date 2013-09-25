@@ -21,7 +21,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">MSKeys LLB</a>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
@@ -62,17 +62,12 @@
         <p><a class="btn btn-primary btn-lg">Learn more »</a></p>
       </div>
     </div>
-
     <div class="container">
-
       <hr>
-
       <footer>
         <p>© LLB 2013</p>
       </footer>
     </div> <!-- /container -->
-
-
     <!--Bootstrap core JavaScript-->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
