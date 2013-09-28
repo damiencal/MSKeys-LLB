@@ -57,9 +57,13 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg">Learn more »</a></p>
+        <script language="javascript">
+        // Si la fonction est disponible (IE)
+        // Expliquez à vos visiteurs comment copier le code source
+        if(window.clipboardData)document.write('<font size=2><i>Pour copier le code dans le Presse-Papier, double-cliquez dessus !</i></font>');
+        </script>
+        <pre style="background-color:#336699;color=#FFFFFF;" ondblclick='javascript:window.clipboardData.setData("Text", this.innerText);alert("Le texte est dans le Presse-Papier.\nVous pouvez maintenant le coller où vous le souhaitez.");'>
+        </pre>
       </div>
     </div>
     <div class="container">
