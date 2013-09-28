@@ -3,7 +3,7 @@ function connect(){
     $hote = "10.22.50.178";
     $utilisateur = "mskeys";
     $motdepasse = "mskeysAdmin";
-
+  
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
     $nombdd="mskeys";
     mysql_select_db($nombdd, $connexion);
@@ -25,7 +25,7 @@ function suppr($suppr){
 }
 
 function update($update){
-     $update = "UPDATE auteur SET =''";
+     $update = "UPDATE";
      mysql_query($update,$connexion);
      return $update;
 }
