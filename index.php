@@ -29,6 +29,20 @@
         </div><!--/.navbar-collapse -->
       </div>
     </div>
+<<<<<<< HEAD
+=======
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <script language="javascript">
+        if(window.clipboardData)document.write('<font size=2><i>Pour copier le code dans le Presse-Papier, double-cliquez dessus !</i></font>');
+        </script>
+        <pre style="background-color:#336699;color=#FFFFFF;" ondblclick='javascript:window.clipboardData.setData("Text", this.innerText);alert("Le texte est dans le Presse-Papier.\nVous pouvez maintenant le coller où vous le souhaitez.");'>
+        </pre>
+      </div>
+    </div>
+>>>>>>> branch 'master' of https://github.com/damiencal/MSKeys-LLB.git
     <div class="container">
       <hr>
       <script language="javascript">
