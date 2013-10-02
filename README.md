@@ -26,4 +26,4 @@ MVC
 
 Frameworks:
 Bootstrap 3,
-jQuery 1.10.2
+jQuery 2.0.3
