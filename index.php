@@ -18,15 +18,19 @@
           <a class="navbar-brand">MSKeys LLB</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <div class="form-group">
-              <input type="text" placeholder="Login" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Accueil</a></li>
+                <li><a href="#importations">Importations</a></li>
+            </ul>
+            <form class="navbar-form navbar-right">
+                <div class="form-group">
+                <input type="text" placeholder="Login" class="form-control">
+                </div>
+                <div class="form-group">
+                <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -36,6 +40,7 @@
         <div class="container">
             
             <? 
+                connect();
                 select_key($select);
 
                 while ($keys = mysql_fetch_array($select)){
