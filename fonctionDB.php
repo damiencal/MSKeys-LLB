@@ -27,7 +27,7 @@ function select_category($select){
     
     $select = "SELECT key FROM mskeys WHERE category='$category';";
     
-    mysql_query($select,$connexion);
+    mysql_query($select);
     return $select;
 }
 
@@ -37,7 +37,7 @@ function add_key($ajout){
     
     $ajout = "INSERT INTO mskeys (category,key,used) VALUES ('$category','$key',$used);";
     
-    mysql_query($ajout,$connexion);
+    mysql_query($ajout);
     return $ajout;
 }
 
@@ -47,7 +47,7 @@ function delete_key($suppr){
     
     $suppr = "DELETE FROM mskeys WHERE key='$key';";
     
-    mysql_query($suppr,$connexion);
+    mysql_query($suppr);
     return $suppr;
 }
 
@@ -57,7 +57,7 @@ function delete_all($suppr){
     
     $suppr = "DELETE * FROM mskeys;";
     
-    mysql_query($suppr,$connexion);
+    mysql_query($suppr);
     return $suppr;
 }
 
@@ -67,7 +67,7 @@ function update_used($update){
     
      $update = "UPDATE mskeys SET used=0 WHERE key='$key';";
      
-     mysql_query($update,$connexion);
+     mysql_query($update);
      return $update;
 }
 
@@ -77,7 +77,7 @@ function update_category($update){
     
      $update = "UPDATE mskeys SET category='$new_category' WHERE category='$category';";
      
-     mysql_query($update,$connexion);
+     mysql_query($update);
      return $update;
 }
 
