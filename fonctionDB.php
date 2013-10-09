@@ -2,83 +2,68 @@
 
 // To connect to the database
 function connect(){
-    $hote = "10.22.50.178";
+    $hote = "10.22.50.188";
     $utilisateur = "mskeys";
     $motdepasse = "mskeysAdmin";
   
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
-    $nombdd="mskeys";
+    $nombdd="MSKeys";
     mysql_select_db($nombdd, $connexion) or die('Connection error');
 }
 
 
-// To select the key
-function select_key($select){
+/* To select the key
+ * 
+ * Parameters : $produit is the name of the product
+ */
+function select_key($produit){
     
-    $select = "SELECT key FROM mskeys WHERE key='$key';";
-    
-    mysql_query($select,$connexion);
-    return $select;
+    $select_key = "SELECT key FROM Keys INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name='$produit' AND utilisee=false;";
+    $result_key = mysql_query($select_key);
+    $row = mysql_fetch_array($result_key);
+    $key = $row['key'];
+    return $key;
 }
 
-
-// To select the OS
-function select_category($select){
+/* To delete the key
+ * 
+ * Parameters : $produit is the name of the product, $cle is the key to insert
+ */
+function add_key($produit, $cle){
     
-    $select = "SELECT key FROM mskeys WHERE category='$category';";
+    $select_produit = "SELECT idProduct FROM Product WHERE name='$produit';";
+    $result_produit = mysql_query($select_produit);
+    $row = mysql_fetch_array($result_produit);
+    $idProduit = $row['idProduct'];
     
-    mysql_query($select);
-    return $select;
+    $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$cle',$idProduit,false);";
+    $result_key = mysql_query($select_key);
+    $row = mysql_fetch_array($result_key);
 }
 
-
-// To add a new key
-function add_key($ajout){
+/*
+ * 
+ * 
+ */
+function update_key($cle, $idProduit, $utilisee, $key){
     
-    $ajout = "INSERT INTO mskeys (category,key,used) VALUES ('$category','$key',$used);";
+    $select_key = "SELECT * FROM Keys WHERE key='$key';";
+    $result_key = mysql_query($select_key);
+    $row = mysql_fetch_array($result_key);
+    $key = $row['key'];
+    return $key;
     
-    mysql_query($ajout);
-    return $ajout;
+    $update_key = "UPDATE Keys SET key='$cle',idProduct='$idProduit',utilisee=$utilisee WHERE key='$key';";
+    
 }
 
-
-// To delete a key
-function delete_key($suppr){
-    
-    $suppr = "DELETE FROM mskeys WHERE key='$key';";
-    
-    mysql_query($suppr);
-    return $suppr;
-}
-
-
-// To delete all rows
-function delete_all($suppr){
-    
-    $suppr = "DELETE * FROM mskeys;";
-    
-    mysql_query($suppr);
-    return $suppr;
-}
-
-
-// To update an already existing key that has been used
-function update_used($update){
-    
-     $update = "UPDATE mskeys SET used=0 WHERE key='$key';";
-     
-     mysql_query($update);
-     return $update;
-}
-
-
-// To update an already existing category
-function update_category($update){
-    
-     $update = "UPDATE mskeys SET category='$new_category' WHERE category='$category';";
-     
-     mysql_query($update);
-     return $update;
+/*
+ * 
+ * 
+ */
+function delete_key($cle, $idProduit){
+    $delete_key = "DELETE * FROM keys WHERE key='$key';";
+    mysql_query($delete_key);
 }
 
 ?>
