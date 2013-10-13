@@ -10,8 +10,36 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
   </head>
-  <body>
-    <? include "fonctionDB.php" ?>
+  <body><br><br><br>
+    <? include "fonctionDB.php";
+    
+        connect();
+        
+        $xmlfile = $_FILES['file']['name'];
+        
+        if(isset($_POST['submit'])){
+            
+            $fichier = $xmlfile;
+            
+            baliseOuvrante($parseur, $nomBalise, $tableauAttributs);
+            baliseFermante($parseur, $nomBalise);
+            affichageTexte($parseur, $texte);
+            
+            $parseurXML = xml_parser_create();// Création du parseur XML
+            xml_set_element_handler($parseurXML, "baliseOuvrante", "baliseFermante");// Indique la balise de début et de fin du fichier XML
+            xml_set_character_data_handler($parseurXML, "affichageTexte");// Indique le texte à récupérer entre les balises
+
+            $open = fopen($fichier, "r");// Ouverture du fichier en lecture
+            if (!$open) die("Impossible d'ouvrir le fichier XML");
+
+            while ( $ligneXML = fgets($open, 1024)){
+                xml_parse($parseurXML, $ligneXML) or die("Erreur XML");// Analyse le document XML ligne par ligne
+            }
+
+            xml_parser_free($parseurXML);// Met fin à l'analyse
+            fclose($open);// Fermeture du fichier
+        }
+    ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -24,10 +52,10 @@
             </ul>
             <form class="navbar-form navbar-right">
                 <div class="form-group">
-                <input type="text" placeholder="Login" class="form-control">
+                    <input type="text" placeholder="Login" class="form-control">
                 </div>
                 <div class="form-group">
-                <input type="password" placeholder="Password" class="form-control">
+                    <input type="password" placeholder="Password" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
             </form>
@@ -41,10 +69,15 @@
         <!-- Default panel contents -->
             <div class="panel-heading">Importations</div>
             <div class="panel-body">
-            <form class="form-inline" role="form">                
+            <form class="form-inline" role="form" enctype="multipart/form-data" method="post">
+                <select name="OS"> 
+                    <option value="Windows7" selected="selected">Windows 7</option>
+                    <option value="Windows8">Windows 8</option>
+                    <option value="WindowsServer">Windows Server</option>
+                <select>
                 <div class="input-group">
-                    <input type="file" class="form-control">
-                    <span class="input-group-addon"><input type="submit" value="Ok"></input></span>
+                    <input type="file" name="file" class="form-control">
+                    <span class="input-group-addon"><input type="submit" name="submit" value="Envoyer"></input></span>
                 </div>
             </form>
                   

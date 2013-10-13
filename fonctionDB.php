@@ -103,5 +103,4 @@ function affichageTexte($parseur, $texte){
             break;
     }         
 }
-
 ?>
