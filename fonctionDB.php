@@ -1,6 +1,6 @@
 <?php
 
-// To connect to the database
+// Connect to the database
 function connect(){
     $hote = "10.22.50.188";
     $utilisateur = "mskeys";
@@ -25,7 +25,7 @@ function select_key($produit){
     return $key;
 }
 
-/* To delete the key
+/* To insert the key
  * 
  * Parameters : $produit is the name of the product, $cle is the key to insert
  */
@@ -41,9 +41,10 @@ function add_key($produit, $cle){
     $row = mysql_fetch_array($result_key);
 }
 
-/*
+/* To update the key
  * 
- * 
+ * Parameters : $idProduit is id of the product, $cle is the key to insert
+ *              $utilisee is a bolean for know key that use, $key is the key to search
  */
 function update_key($cle, $idProduit, $utilisee, $key){
     
@@ -57,13 +58,50 @@ function update_key($cle, $idProduit, $utilisee, $key){
     
 }
 
-/*
+/* To delete the key
  * 
- * 
+ * Parameters : $idProduit is the id of the product, $cle is the key to search
  */
 function delete_key($cle, $idProduit){
     $delete_key = "DELETE * FROM keys WHERE key='$key';";
     mysql_query($delete_key);
+}
+
+/* Traitement de la balises ouvrantes
+ * 
+ * Appelée par le "parseur" 
+ * Deux Parameters: l'identifiant du parseur, le nom de la balise ouvrante rencontrée.
+ */
+function baliseOuvrante($parseur, $nomBalise){
+    global $derniereBalise;
+    $derniereBalise = $nomBalise;
+}
+
+/* Traitement de la balises fermantes
+ *
+ * Appelée par le "parseur" 
+ * Deux Parameters: l'identifiant du parseur, le nom de la balise fermante rencontrée.
+ */
+function baliseFermante($parseur, $nomBalise){
+    global $derniereBalise;
+    $derniereBalise = "";
+}
+
+/* Traitement du texte
+ * 
+ * Deux Parameters: l'identifiant du parseur, le texte qu'il renvoit
+ */
+function affichageTexte($parseur, $texte){
+    global $derniereBalise;
+    $os = $_POST['OS'];
+
+    // Insertion dans la base de données
+    switch ($derniereBalise) {
+        case "KEY":// Indique le texte à prendre dans la balise "ex : <Key>texte à prendre</key>"
+            $sql= "INSERT INTO `keys`(`produit`, `cle`) VALUES ('$os', '$texte')";
+            mysql_query($sql) or die("Erreur SQL");
+            break;
+    }         
 }
 
 ?>
