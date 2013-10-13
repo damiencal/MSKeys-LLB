@@ -10,7 +10,7 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
   </head>
-  <body><br><br><br>
+  <body>
     <? include "fonctionDB.php";
     
         connect();
