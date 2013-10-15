@@ -15,13 +15,11 @@
     
         connect();
         
-        $xmlfile = $_FILES['file']['name'];
-        
         if(isset($_POST['submit'])){
             
-            $fichier = $xmlfile;
+            $fichier = $_FILES['file']['tmp_name'];
             
-            baliseOuvrante($parseur, $nomBalise, $tableauAttributs);
+            baliseOuvrante($parseur, $nomBalise);
             baliseFermante($parseur, $nomBalise);
             affichageTexte($parseur, $texte);
             
