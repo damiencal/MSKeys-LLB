@@ -2,7 +2,7 @@
 
 // Connect to the database
 function connect(){
-    $hote = "10.22.50.188";
+    $hote = "localhost";
     $utilisateur = "mskeys";
     $motdepasse = "mskeysAdmin";
   
@@ -89,7 +89,7 @@ function baliseFermante($parseur, $nomBalise){
 
 /* Traitement du texte
  * 
- * Deux Parameters: l'identifiant du parseur, le texte qu'il renvoit
+ * Two Parameters: l'identifiant du parseur, le texte qu'il renvoit
  */
 function affichageTexte($parseur, $texte){
     global $derniereBalise;
@@ -101,6 +101,27 @@ function affichageTexte($parseur, $texte){
             $sql= "INSERT INTO `Keys`(`key`, `idProduct`) VALUES ('$texte', (SELECT `idProduct` FROM `Product` WHERE name LIKE '$os%'))";
             mysql_query($sql) or die();
             break;
+    }
+}
+
+function sessionConnexion(){
+    
+    $login = $_POST['Login'];
+    $mdp = $_POST['Password'];
+    
+    $select_session = "SELECT id FROM Users WHERE login='$login' AND password='".md5($mdp)."'";
+    $result = mysql_query($select_session) or die("Erreur SQL");
+    
+    if (mysql_num_rows($result) == "0")
+    {
+        echo "Erreur de connexion.";
+    }
+    else
+    {
+        $_SESSION['Login'] = $login;
+        $_SESSION['Password'] = $mdp;
+        
+        header("Location:index.php");
     }
 }
 ?>

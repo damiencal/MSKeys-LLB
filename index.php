@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+    
+    <?php
+        session_start();
+        if($_POST['submit_session']){
+            
+            echo "submit";
+            connect();
+            
+            sessionConnexion();
+        }
+    ?>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +23,7 @@
   </head>
   <body>
     <? include "fonctionDB.php" ?>
+      < 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -22,14 +34,14 @@
                 <li class="active"><a href="#">Accueil</a></li>
                 <li><a href="importations.php">Importations</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
+            <form class="navbar-form navbar-right" method="post">
                 <div class="form-group">
-                <input type="text" placeholder="Login" class="form-control">
+                <input name="Login" type="text" placeholder="Login" class="form-control">
                 </div>
                 <div class="form-group">
-                <input type="password" placeholder="Password" class="form-control">
+                <input name="Password" type="password" placeholder="Password" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
+                <input name="submit_session" type="submit" class="btn btn-success">Sign in</input>
             </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -40,6 +52,11 @@
         <div class="container">
             <h1>Bienvenue</h1>
             <h3>Veuillez vous authentifier pour avoir accès au clé de Microsoft</h3>
+            <? 
+            if (($_SESSION['Login']) AND ($_SESSION['Password']))
+            {?>
+            <!-- A remplir : fenêtres clés -->
+            <? } ?>
             <footer>
                 <p>© LLB 2013</p>
             </footer>
