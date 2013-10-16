@@ -98,9 +98,9 @@ function affichageTexte($parseur, $texte){
     // Insertion dans la base de données
     switch ($derniereBalise) {
         case "KEY":// Indique le texte à prendre dans la balise "ex : <Key>texte à prendre</key>"
-            $sql= "INSERT INTO `keys`(`produit`, `cle`) VALUES ('$os', '$texte')";
-            mysql_query($sql) or die("Erreur SQL");
+            $sql= "INSERT INTO `Keys`(`key`, `idProduct`) VALUES ('$texte', (SELECT `idProduct` FROM `Product` WHERE name LIKE '$os%'))";
+            mysql_query($sql) or die();
             break;
-    }         
+    }
 }
 ?>

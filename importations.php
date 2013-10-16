@@ -36,6 +36,7 @@
 
             xml_parser_free($parseurXML);// Met fin à l'analyse
             fclose($open);// Fermeture du fichier
+            header('Location: importations.php?success=1'); die;
         }
     ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -69,9 +70,9 @@
             <div class="panel-body">
             <form class="form-inline" role="form" enctype="multipart/form-data" method="post">
                 <select name="OS"> 
-                    <option value="Windows7" selected="selected">Windows 7</option>
-                    <option value="Windows8">Windows 8</option>
-                    <option value="WindowsServer">Windows Server</option>
+                    <option value="Windows 7" selected="selected">Windows 7</option>
+                    <option value="Windows 8">Windows 8</option>
+                    <option value="Windows Server 2008">Windows Server 2008</option>
                 <select>
                 <div class="input-group">
                     <input type="file" name="file" class="form-control">
@@ -80,7 +81,11 @@
             </form>
                   
             </div>
-            <div class="alert alert-success">Réussi</div>
+            <?
+            if(!empty($_GET[success])){
+                ?><div class="alert alert-success">Réussi</div><?
+            }
+            ?>
         </div>
         
         <div class="panel panel-default">
