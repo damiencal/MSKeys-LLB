@@ -13,6 +13,8 @@
   <body>
     <? include "fonctionDB.php";
     
+        if (($_SESSION['Login']) and ($_SESSION['Password'])){
+    
         connect();
         
         if(isset($_POST['submit'])){
@@ -111,5 +113,8 @@
     <!--Bootstrap core JavaScript-->
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <? } else {
+        header("Location:index.php");
+    } ?>
   </body>
 </html>
