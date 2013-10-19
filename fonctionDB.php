@@ -2,13 +2,16 @@
 
 // Connect to the database
 function connect(){
-    $hote = "localhost";
+    /*$hote = "localhost";
     $utilisateur = "mskeys";
     $motdepasse = "mskeysAdmin";
   
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
     $nombdd="MSKeys";
-    mysql_select_db($nombdd, $connexion) or die('Connection error');
+    mysql_select_db($nombdd, $connexion) or die('Connection error');*/
+    
+    $connexion = mysql_connect('localhost', 'root', '3112');// Connexion MySQL
+    mysql_select_db('connexion',$connexion);//selection de la base de données
 }
 
 
@@ -29,14 +32,16 @@ function select_key($produit){
  * 
  * Parameters : $produit is the name of the product, $cle is the key to insert
  */
-function add_key($produit, $cle){
+function add_key(){
+    $os = $_POST['OS2'];// valeurs des select option de l'importation manuelle
+    $insertion = $_POST['insertion'];// input texte de l'ajout manuelle d'une clé
     
-    $select_produit = "SELECT idProduct FROM Product WHERE name='$produit';";
+    $select_produit = "SELECT idProduct FROM Product WHERE name='$os';";
     $result_produit = mysql_query($select_produit);
     $row = mysql_fetch_array($result_produit);
     $idProduit = $row['idProduct'];
     
-    $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$cle',$idProduit,false);";
+    $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$insertion',$idProduit,false);";
     $result_key = mysql_query($select_key);
     $row = mysql_fetch_array($result_key);
 }
@@ -93,7 +98,7 @@ function baliseFermante($parseur, $nomBalise){
  */
 function affichageTexte($parseur, $texte){
     global $derniereBalise;
-    $os = $_POST['OS'];
+    $os = $_POST['OS1'];// valeurs des select option de l'importation d'un fichier XML
 
     // Insertion dans la base de données
     switch ($derniereBalise) {
@@ -106,10 +111,12 @@ function affichageTexte($parseur, $texte){
 
 function sessionConnexion(){
     
-    $login = $_POST['Login'];
-    $mdp = $_POST['Password'];
+    $login = $_POST['login'];// input texte du login de connexion
+    $mdp = $_POST['password'];// input texte du mot de passe de connexion
     
-    $select_session = "SELECT id FROM Users WHERE login='$login' AND password='".md5($mdp)."'";
+    $select_session ="SELECT id FROM Utilisateur WHERE login='$login' AND pass='$mdp'";
+    
+    //s$select_session = "SELECT id FROM Users WHERE login='$login' AND password='".md5($mdp)."'";
     $result = mysql_query($select_session) or die("Erreur SQL");
     
     if (mysql_num_rows($result) == "0")
@@ -118,8 +125,8 @@ function sessionConnexion(){
     }
     else
     {
-        $_SESSION['Login'] = $login;
-        $_SESSION['Password'] = $mdp;
+        $_SESSION['login'] = $login;
+        $_SESSION['password'] = $mdp;
         
         header("Location:index.php");
     }

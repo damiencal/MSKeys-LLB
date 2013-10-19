@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
+    <?php
+        session_start();
+    ?>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,11 +14,12 @@
     <link href="css/bootstrap.css" rel="stylesheet">
   </head>
   <body>
-    <? include "fonctionDB.php";
+    <? if (($_SESSION['login']) and ($_SESSION['password'])){
+       
+        include "fonctionDB.php";
     
-        if (($_SESSION['Login']) and ($_SESSION['Password'])){
-    
-        connect();
+        $connexion = mysql_connect('localhost', 'root', '3112');// Connexion MySQL
+        mysql_select_db('connexion',$connexion);//selection de la base de données 
         
         if(isset($_POST['submit'])){
             
@@ -40,6 +44,11 @@
             fclose($open);// Fermeture du fichier
             header('Location: importations.php?success=1'); die;
         }
+        
+        if(isset($_POST['ajout'])){
+            add_key();
+            header('Location: importations.php?success=1'); die;
+        }
     ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -51,14 +60,8 @@
                 <li><a href="index.php">Accueil</a></li>
                 <li class="active" ><a href="#">Importations</a></li>
             </ul>
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" placeholder="Login" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
+            <form class="navbar-form navbar-right" role="form" action="index.php" method="post">
+                <input class="btn btn-warning" name="logout" type="submit" value="Déconnexion"></input>
             </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -71,21 +74,22 @@
             <div class="panel-heading">Importations</div>
             <div class="panel-body">
             <form class="form-inline" role="form" enctype="multipart/form-data" method="post">
-                <select name="OS"> 
-                    <option value="Windows 7" selected="selected">Windows 7</option>
-                    <option value="Windows 8">Windows 8</option>
-                    <option value="Windows Server 2008">Windows Server 2008</option>
-                <select>
                 <div class="input-group">
+                    <div class="input-group-btn">
+                        <select class="btn btn-primary dropdown-toggle" name="OS1"> 
+                            <option value="Windows 7" selected="selected">Windows 7</option>
+                            <option value="Windows 8">Windows 8</option>
+                            <option value="Windows Server 2008">Windows Server 2008</option>
+                        <select>
+                    </div>
                     <input type="file" name="file" class="form-control">
-                    <span class="input-group-addon"><input type="submit" name="submit" value="Envoyer"></input></span>
+                    <span class="input-group-btn"><input class="btn btn-primary" type="submit" name="submit" value="Envoyer"></input></span>
                 </div>
             </form>
-                  
             </div>
             <?
             if(!empty($_GET[success])){
-                ?><div class="alert alert-success">Réussi</div><?
+                ?><div class="alert alert-success">Importation réussi</div><?
             }
             ?>
         </div>
@@ -94,17 +98,27 @@
         <!-- Default panel contents -->
             <div class="panel-heading">Importations manuelle</div>
             <div class="panel-body">
-                <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        Dropdown
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Dropdown link</a></li>
-                    </ul>
-                </div>
+                <form class="form-inline" role="form" method="post">
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <select class="btn btn-primary dropdown-toggle" name="OS2"> 
+                                    <option value="Windows 7" selected="selected">Windows 7</option>
+                                    <option value="Windows 8">Windows 8</option>
+                                    <option value="Windows Server 2008">Windows Server 2008</option>
+                                <select>
+                            </div>
+                            <input name="insertion" type="text" class="form-control">
+                            <span class="input-group-btn"><button name="ajout" class="btn btn-primary" type="button">Ajouter</button></span>
+                        </div><!-- /input-group -->
+                    </div><!-- /.col-lg-6 -->
+                </form>
             </div>
-            <div class="alert alert-success">Réussi</div>
+            <?
+            if(!empty($_GET[success])){
+                ?><div class="alert alert-success">Importation manuelle réussi</div><?
+            }
+            ?>
         </div>
     </div>
     <footer>

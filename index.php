@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
-    
     <?php
         session_start();
+        
+        if ($_POST['logout']) {
+            session_destroy();
+            header("Location:index.php");
+        }
     ?>
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -15,8 +19,12 @@
     <link href="css/bootstrap.css" rel="stylesheet">
   </head>
   <body>
-    <? include "fonctionDB.php" ?>
-      < 
+    <? include "fonctionDB.php";
+    
+    connect();    
+    sessionConnexion();
+    
+    ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -28,10 +36,12 @@
                 <li><a href="importations.php">Importations</a></li>
             </ul>
             <? 
-            if (($_SESSION['Login']) and ($_SESSION['Password'])){
-                echo "Connexion";
+            if (($_SESSION['login']) and ($_SESSION['password'])){
+                ?><form class="navbar-form navbar-right" role="form" action="index.php" method="post">
+                    <input class="btn btn-warning" name="logout" type="submit" value="Déconnexion"></input>
+                </form><?
             } else {?>
-            <form class="navbar-form navbar-right" action="valid_auth.php" method="post">
+            <form class="navbar-form navbar-right" role="form" action="index.php" method="post">
                 <div class="form-group">
                 <input name="login" type="text" placeholder="Login" class="form-control">
                 </div>
@@ -48,10 +58,42 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div class="container">
-            <?if (($_SESSION['Login']) AND ($_SESSION['Password'])){ 
-                echo "Fenêtre clé";?>
-                <!-- A remplir : fenêtres clés -->
-            <? } else { ?>
+            <?if (($_SESSION['login']) AND ($_SESSION['password'])){ ?>
+                <center><h3>Veuillez faire une recherche en fonction de la clé du Système d'Eploitation</h3>
+                <form class="form-inline" role="form" method="post">
+                    <select class="btn btn-info dropdown-toggle" name="OS"> 
+                        <option value="Windows 7" selected="selected">Windows 7</option>
+                        <option value="Windows 8">Windows 8</option>
+                        <option value="Windows Server 2008">Windows Server 2008</option>
+                    <select>
+                    <input class="btn btn-info" type="submit" name="submit_option" value="Valider"></input>
+                </form></center><br>
+            <? if ($_POST['submit_option']){
+            
+                    $select_key = "SELECT * FROM `keys` WHERE produit LIKE '$os%' AND id <= 7";
+                    $result_key = mysql_query($select_key);
+                    $fetch = mysql_fetch_array($result_key);
+                    
+                    ?>
+                    <form class="form-inline" role="form" method="post">
+                        <table class="table">
+                            <div class="panel panel-primary">
+                            <div class="panel-heading"><center><? echo $fetch['produit'] ?></center></div><center><?
+
+                            while ($test = mysql_fetch_array($result_key)){
+                                ?>
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <input type="text" value="<? echo $test['cle'] ?>" class="form-control">
+                                        <span class="input-group-btn"><button class="btn btn-info" type="button">Utiliser</button></span>
+                                    </div><!-- /input-group -->
+                                </div><!-- /.col-lg-6 --><?
+                            }?></div>
+                        </table>
+                    </form>
+                    <h4 class="text-warning">Copier la clef puis cliquez sur le bouton utiliser</h4><?
+                }
+            } else { ?>
             <h1>Bienvenue</h1>
             <h3>Veuillez vous authentifier pour avoir accès au clé de Microsoft</h3>
             <? } ?>
