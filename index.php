@@ -59,7 +59,7 @@
     <div class="jumbotron">
         <div class="container">
             <?if (($_SESSION['login']) AND ($_SESSION['password'])){ ?>
-                <center><h3>Veuillez faire une recherche en fonction de la clé du Système d'Eploitation</h3>
+                <center><h3>Veuillez faire une recherche en fonction de la clé du Système d'Exploitation</h3>
                 <form class="form-inline" role="form" method="post">
                     <select class="btn btn-info dropdown-toggle" name="OS"> 
                         <option value="Windows 7" selected="selected">Windows 7</option>
