@@ -17,11 +17,10 @@
     <? if (($_SESSION['login']) and ($_SESSION['password'])){
        
         include "fonctionDB.php";
-    
-        $connexion = mysql_connect('localhost', 'root', '3112');// Connexion MySQL
-        mysql_select_db('connexion',$connexion);//selection de la base de données 
         
-        if(isset($_POST['submit'])){
+        connect();
+        
+        if(isset($_POST['submit_import'])){
             
             $fichier = $_FILES['file']['tmp_name'];
             
@@ -47,7 +46,7 @@
         
         if(isset($_POST['ajout'])){
             add_key();
-            header('Location: importations.php?success=1'); die;
+            header('Location: importations.php?success=2'); die;
         }
     ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -77,18 +76,18 @@
                 <div class="input-group">
                     <div class="input-group-btn">
                         <select class="btn btn-primary dropdown-toggle" name="OS1"> 
-                            <option value="Windows 7" selected="selected">Windows 7</option>
+                            <option value="Windows 7 Professional" selected="selected">Windows 7</option>
                             <option value="Windows 8">Windows 8</option>
                             <option value="Windows Server 2008">Windows Server 2008</option>
                         <select>
                     </div>
                     <input type="file" name="file" class="form-control">
-                    <span class="input-group-btn"><input class="btn btn-primary" type="submit" name="submit" value="Envoyer"></input></span>
+                    <span class="input-group-btn"><input name="submit_import" class="btn btn-primary" type="submit" value="Envoyer"></input></span>
                 </div>
             </form>
             </div>
             <?
-            if(!empty($_GET[success])){
+            if($_GET[success] == "1"){
                 ?><div class="alert alert-success">Importation réussi</div><?
             }
             ?>
@@ -103,19 +102,19 @@
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <select class="btn btn-primary dropdown-toggle" name="OS2"> 
-                                    <option value="Windows 7" selected="selected">Windows 7</option>
+                                    <option value="Windows 7 Professional" selected="selected">Windows 7</option>
                                     <option value="Windows 8">Windows 8</option>
                                     <option value="Windows Server 2008">Windows Server 2008</option>
                                 <select>
                             </div>
                             <input name="insertion" type="text" class="form-control">
-                            <span class="input-group-btn"><button name="ajout" class="btn btn-primary" type="button">Ajouter</button></span>
+                            <span class="input-group-btn"><input name="submit_ajout" class="btn btn-primary" type="submit" value="Ajouter"></input></span>
                         </div><!-- /input-group -->
                     </div><!-- /.col-lg-6 -->
                 </form>
             </div>
             <?
-            if(!empty($_GET[success])){
+            if($_GET[success] == "2"){
                 ?><div class="alert alert-success">Importation manuelle réussi</div><?
             }
             ?>

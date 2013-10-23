@@ -2,16 +2,13 @@
 
 // Connect to the database
 function connect(){
-    /*$hote = "localhost";
+    $hote = "10.22.50.188";
     $utilisateur = "mskeys";
     $motdepasse = "mskeysAdmin";
   
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
     $nombdd="MSKeys";
-    mysql_select_db($nombdd, $connexion) or die('Connection error');*/
-    
-    $connexion = mysql_connect('localhost', 'root', '3112');// Connexion MySQL
-    mysql_select_db('connexion',$connexion);//selection de la base de données
+    mysql_select_db($nombdd, $connexion) or die('Connection error');
 }
 
 
@@ -19,13 +16,12 @@ function connect(){
  * 
  * Parameters : $produit is the name of the product
  */
-function select_key($produit){
+function select_key(){
     
-    $select_key = "SELECT key FROM Keys INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name='$produit' AND utilisee=false;";
+    $select_key = "SELECT `key` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$produit%' AND idKey <= 7 AND utilisee = 0";
     $result_key = mysql_query($select_key);
     $row = mysql_fetch_array($result_key);
-    $key = $row['key'];
-    return $key;
+    return $row;
 }
 
 /* To insert the key
@@ -51,7 +47,7 @@ function add_key(){
  * Parameters : $idProduit is id of the product, $cle is the key to insert
  *              $utilisee is a bolean for know key that use, $key is the key to search
  */
-function update_key($cle, $idProduit, $utilisee, $key){
+function update_key(){
     
     $select_key = "SELECT * FROM Keys WHERE key='$key';";
     $result_key = mysql_query($select_key);
@@ -103,8 +99,8 @@ function affichageTexte($parseur, $texte){
     // Insertion dans la base de données
     switch ($derniereBalise) {
         case "KEY":// Indique le texte à prendre dans la balise "ex : <Key>texte à prendre</key>"
-            $sql= "INSERT INTO `Keys`(`key`, `idProduct`) VALUES ('$texte', (SELECT `idProduct` FROM `Product` WHERE name LIKE '$os%'))";
-            mysql_query($sql) or die();
+            $sql= "INSERT INTO `Keys` (`key`, `idProduct`, `utilisee`) VALUES ('$texte', (SELECT `idProduct` FROM `Product` WHERE name LIKE '$os%'), 0)";
+            mysql_query($sql) or die("Erreur SQL");
             break;
     }
 }
@@ -114,21 +110,22 @@ function sessionConnexion(){
     $login = $_POST['login'];// input texte du login de connexion
     $mdp = $_POST['password'];// input texte du mot de passe de connexion
     
-    $select_session ="SELECT id FROM Utilisateur WHERE login='$login' AND pass='$mdp'";
-    
-    //s$select_session = "SELECT id FROM Users WHERE login='$login' AND password='".md5($mdp)."'";
-    $result = mysql_query($select_session) or die("Erreur SQL");
-    
-    if (mysql_num_rows($result) == "0")
-    {
-        echo "Erreur de connexion.";
-    }
-    else
-    {
-        $_SESSION['login'] = $login;
-        $_SESSION['password'] = $mdp;
-        
-        header("Location:index.php");
+    if ($_POST['submit_session']){
+
+        $select_session = "SELECT `id` FROM Admin WHERE login = '$login' AND password = MD5('$mdp')";
+        $result = mysql_query($select_session) or die("Erreur SQL");
+
+        if (mysql_num_rows($result) == "0")
+        {
+            echo "Erreur de connexion.";
+        }
+        else
+        {
+            $_SESSION['login'] = $login;
+            $_SESSION['password'] = $mdp;
+
+            header("Location:index.php");
+        }
     }
 }
 ?>
