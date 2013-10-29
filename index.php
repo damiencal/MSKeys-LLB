@@ -2,38 +2,28 @@
 <html lang="fr">
     <?php
         session_start();
-        
+
         include "fonctionDB.php";
-        
+
         if ($_POST['logout']) {
             session_destroy();
             header("Location:index.php");
         }
     ?>
     <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="MSDN LLB Keys">
-    <meta name="author" content="LLB">
-    <link rel="shortcut icon" href="favicon.ico">
-    <title>MSKeys LLB</title>
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet">
-  </head>
-  <body>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="MSDN LLB Keys">
+        <meta name="author" content="LLB">
+        <link rel="shortcut icon" href="favicon.ico">
+        <title>MSKeys LLB</title>
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.css" rel="stylesheet">
+    </head>
+    <body>
     <?    
     connect();
     sessionConnexion();
-    
-    if($_GET['submit_utiliser']){
-        
-        $email = $_GET['email'];
-        mail($email, "ledestinataire", "objet", "la clef");
-               
-        $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE `idKey` = '$a'";
-        mysql_query($update_key) or die("Erreur SQL Update");
-        // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
-    }    
     ?>
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -86,7 +76,7 @@
                     $nb = mysql_num_rows($nbclef);
                     
                     if (mysql_num_rows($nbclef) != ""){
-                        ?><form class="form-inline" role="form" method="get">
+                        ?><form class="form-inline" role="form" method="post">
                             <table class="table">
                                 <div class="panel panel-primary">
                                 <div class="panel-heading"><center><? echo $os; ?></center></div><center><?
@@ -97,7 +87,7 @@
                                         <div class="input-group">
                                             <input type="text" value="<? echo $row['key']; ?>" class="form-control" readonly>
                                             <span class="input-group-btn">
-                                                <input class="btn btn-info" type="submit" name="submit_utiliser" value="Obtenir" onClick="email=prompt('Veuillez entrer une adresse email','Votre email');location.href = 'index.php?email='+email"></input>
+                                                <input class="btn btn-info" type="submit" name="submit_utiliser" value="Obtenir" onClick="email=prompt('Veuillez entrer une adresse email','Email');"></input>
                                             </span>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 --><?
@@ -110,6 +100,15 @@
                     else {
                         ?><center><h4 class="text-warning">Aucune clef(s) trouver</h4></center><?
                     }
+                }
+                
+                if($_POST['submit_utiliser']){
+                    //mail($email, "ledestinataire", "objet", "la clef");
+                    $idKey =$row['idKey'];
+                    
+                    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE `Keys`.`idKey` = $idKey";
+                    mysql_query($update_key) or die("Erreur SQL Update");
+                    // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
                 }
             }
             
