@@ -76,18 +76,18 @@
                     $nb = mysql_num_rows($nbclef);
                     
                     if (mysql_num_rows($nbclef) != ""){
-                        ?><form class="form-inline" role="form" method="post">
+                        ?><form class="form-inline" role="form" method="get">
                             <table class="table">
                                 <div class="panel panel-primary">
-                                <div class="panel-heading"><center><? echo $os; ?></center></div><center><?
+                                <div class="panel-heading"><center><? echo $os; ?></center></div><?
 
                                 while ($row = mysql_fetch_array($result_key)){
-                                    ?>
+                                    list($idKey, $key, $idProduct, $utilisee) = $row;?>
                                     <div class="col-lg-6">
                                         <div class="input-group">
-                                            <input type="text" value="<? echo $row['key']; ?>" class="form-control" readonly>
+                                            <input type="text" name="key" value="<? echo $key; ?>" class="form-control" readonly>
                                             <span class="input-group-btn">
-                                                <input class="btn btn-info" type="submit" name="submit_utiliser" value="Obtenir" onClick="email=prompt('Veuillez entrer une adresse email','Email');"></input>
+                                                <a class="btn btn-info" onClick="email = prompt('Veulliez rentrer un mail','Email')" href="index.php?idKey=<?echo $idKey?>&action=clef">Obtenir</a>
                                             </span>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 --><?
@@ -102,13 +102,12 @@
                     }
                 }
                 
-                if($_POST['submit_utiliser']){
-                    //mail($email, "ledestinataire", "objet", "la clef");
-                    $idKey =$row['idKey'];
-                    
-                    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE `Keys`.`idKey` = $idKey";
-                    mysql_query($update_key) or die("Erreur SQL Update");
-                    // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
+                if(isset($_GET['action'])){
+                    if($_GET['action']=="clef"){
+                        //mail($email, "ledestinataire", "objet", "la clef");
+                        
+                        update_key();
+                    }
                 }
             }
             

@@ -48,16 +48,11 @@ function add_key(){
  *              $utilisee is a bolean for know key that use, $key is the key to search
  */
 function update_key(){
-    
-    $select_key = "SELECT `idKey` FROM `Keys` WHERE `key` = '$key'";
-    $result_key = mysql_query($select_key);
-    $row = mysql_fetch_array($result_key);
-    $key = $row['key'];
-    return $key;
-    
-    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE  `Keys`.`idKey` = $idKey";
+    $idKey = $_GET['idKey'];
+
+    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE `Keys`.`idKey` = '$idKey'";
     mysql_query($update_key) or die("Erreur SQL Update");
-    
+    // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
 }
 
 /* To delete the key
