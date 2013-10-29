@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="MSDN LLB Keys">
     <meta name="author" content="LLB">
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="shortcut icon" href="favicon.ico">
     <title>MSKeys LLB</title>
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
@@ -33,22 +33,27 @@
             xml_set_character_data_handler($parseurXML, "affichageTexte");// Indique le texte à récupérer entre les balises
 
             $open = fopen($fichier, "r");// Ouverture du fichier en lecture
-            if (!$open) die("Impossible d'ouvrir le fichier XML");
+            if (!$open) die("Impossible d'ouvrir le fichier XML");{
+            header('Location: importations.php?danger=1');}
 
             while ( $ligneXML = fgets($open, 1024)){
                 xml_parse($parseurXML, $ligneXML) or die("Erreur XML");// Analyse le document XML ligne par ligne
+                header('Location: importations.php?danger=1');
             }
 
             xml_parser_free($parseurXML);// Met fin à l'analyse
             fclose($open);// Fermeture du fichier
-            header('Location: importations.php?success=1'); die;
+            header('Location: importations.php?success=1');
         }
         
         if(isset($_POST['ajout'])){
             add_key();
-            header('Location: importations.php?success=2'); die;
+            header('Location: importations.php?success=2') or header('Location: importations.php?danger=2');
         }
     ?>
+    
+    <!-- MENU -->
+    
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -65,6 +70,8 @@
         </div><!--/.navbar-collapse -->
       </div>
     </div>
+      
+    <!-- IMPORTATIONS XML -->
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="container"><br><br><br><br>
@@ -89,9 +96,12 @@
             <?
             if($_GET[success] == "1"){
                 ?><div class="alert alert-success">Importation réussi</div><?
-            }
+            } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div><? }
             ?>
         </div>
+        
+        
+        <!-- IMPORTATIONS MANUELLE -->
         
         <div class="panel panel-default">
         <!-- Default panel contents -->
@@ -116,7 +126,7 @@
             <?
             if($_GET[success] == "2"){
                 ?><div class="alert alert-success">Importation manuelle réussi</div><?
-            }
+            } elseif ($_GET[danger] == "2") { ?><div class="alert alert-danger">Importation manuelle echoué</div><? }
             ?>
         </div>
     </div>

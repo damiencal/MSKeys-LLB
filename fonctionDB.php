@@ -18,10 +18,10 @@ function connect(){
  */
 function select_key(){
     
-    $select_key = "SELECT `key` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$produit%' AND idKey <= 7 AND utilisee = 0";
-    $result_key = mysql_query($select_key);
-    $row = mysql_fetch_array($result_key);
-    return $row;
+    $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clefs
+    $select_key = "SELECT `key` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = 0  LIMIT 0,6";
+    $result_key = mysql_query($select_key) or die("Erreur SQL Select");
+    return $result_key;
 }
 
 /* To insert the key
@@ -29,7 +29,7 @@ function select_key(){
  * Parameters : $produit is the name of the product, $cle is the key to insert
  */
 function add_key(){
-    $os = $_POST['OS2'];// valeurs des select option de l'importation manuelle
+    $os = $_POST['OS2'];// valeurs du select option de l'importation manuelle
     $insertion = $_POST['insertion'];// input texte de l'ajout manuelle d'une clé
     
     $select_produit = "SELECT idProduct FROM Product WHERE name='$os';";
@@ -38,7 +38,7 @@ function add_key(){
     $idProduit = $row['idProduct'];
     
     $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$insertion',$idProduit,false);";
-    $result_key = mysql_query($select_key);
+    $result_key = mysql_query($select_key) or die("Erreur SQL Insert");;
     $row = mysql_fetch_array($result_key);
 }
 
@@ -49,13 +49,14 @@ function add_key(){
  */
 function update_key(){
     
-    $select_key = "SELECT * FROM Keys WHERE key='$key';";
+    $select_key = "SELECT `idKey` FROM `Keys` WHERE `key` = '$key'";
     $result_key = mysql_query($select_key);
     $row = mysql_fetch_array($result_key);
     $key = $row['key'];
     return $key;
     
-    $update_key = "UPDATE Keys SET key='$cle',idProduct='$idProduit',utilisee=$utilisee WHERE key='$key';";
+    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE  `Keys`.`idKey` = $idKey";
+    mysql_query($update_key) or die("Erreur SQL Update");
     
 }
 
@@ -65,7 +66,7 @@ function update_key(){
  */
 function delete_key($cle, $idProduit){
     $delete_key = "DELETE * FROM keys WHERE key='$key';";
-    mysql_query($delete_key);
+    mysql_query($delete_key) or die("Erreur SQL Delete");;
 }
 
 /* Traitement de la balises ouvrantes
@@ -94,13 +95,13 @@ function baliseFermante($parseur, $nomBalise){
  */
 function affichageTexte($parseur, $texte){
     global $derniereBalise;
-    $os = $_POST['OS1'];// valeurs des select option de l'importation d'un fichier XML
+    $os = $_POST['OS1'];// valeurs du select option de l'importation d'un fichier XML
 
     // Insertion dans la base de données
     switch ($derniereBalise) {
         case "KEY":// Indique le texte à prendre dans la balise "ex : <Key>texte à prendre</key>"
             $sql= "INSERT INTO `Keys` (`key`, `idProduct`, `utilisee`) VALUES ('$texte', (SELECT `idProduct` FROM `Product` WHERE name LIKE '$os%'), 0)";
-            mysql_query($sql) or die("Erreur SQL");
+            mysql_query($sql) or die("Erreur SQL Parsing");
             break;
     }
 }
@@ -115,12 +116,10 @@ function sessionConnexion(){
         $select_session = "SELECT `id` FROM Admin WHERE login = '$login' AND password = MD5('$mdp')";
         $result = mysql_query($select_session) or die("Erreur SQL");
 
-        if (mysql_num_rows($result) == "0")
-        {
-            echo "Erreur de connexion.";
+        if (mysql_num_rows($result) == "0"){
+            header("Location:index.php?danger=1");
         }
-        else
-        {
+        else {
             $_SESSION['login'] = $login;
             $_SESSION['password'] = $mdp;
 
