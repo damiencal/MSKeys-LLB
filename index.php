@@ -17,20 +17,34 @@
         <meta name="author" content="LLB">
         <link rel="shortcut icon" href="favicon.ico">
         <title>MSKeys LLB</title>
+        
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <!--<link href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css" rel="stylesheet">
+        
+        <!--Bootstrap core JavaScript-->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
     </head>
     <body>
     <?    
     connect();
     sessionConnexion();
     ?>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <a class="navbar-brand">MSKeys LLB</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">MSKeys LLB</a>
         </div>
-        <div class="navbar-collapse collapse">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="index.php">Accueil</a></li>
                 <li><a href="importations.php">Importations</a></li>
@@ -68,6 +82,10 @@
                     <select>
                     <input class="btn btn-info" type="submit" name="submit_option" value="Valider"></input>
                 </form></center><br>
+                <?if($_GET[success] == "1"){
+                    ?><div class="alert alert-success"><center>Réussi</center></div>
+                    <script>window.location='index.php'</script><?
+                }?>
             <? if ($_POST['submit_option']){
                 
                     $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clefs
@@ -87,11 +105,18 @@
                                         <div class="input-group">
                                             <input type="text" name="key" value="<? echo $key; ?>" class="form-control" readonly>
                                             <span class="input-group-btn">
-                                                <a class="btn btn-info" onClick="email = prompt('Veulliez rentrer un mail','Email')" href="index.php?idKey=<?echo $idKey?>&action=clef">Obtenir</a>
+                                                <a class="btn btn-info" 
+                                                   onClick="email = prompt('Veulliez rentrer votre email pour recevoir la clef');
+                                                            if (confirm('Est se que votre email est bon ?\n\n' + email)){
+                                                                location.href='index.php?idKey=<?echo $idKey?>&action=clef&success=1&email='+ email;
+                                                            }else{
+                                                                alert('Votre email est mauvais');
+                                                            }">Obtenir</a>
                                             </span>
                                         </div><!-- /input-group -->
                                     </div><!-- /.col-lg-6 --><?
-                                }?></div>
+                                }?>
+                                </div>
                             </table>
                         </form>
                         <center><h4 class="text-warning">Copier la clef puis cliquez sur le bouton utiliser</h4><?
@@ -104,7 +129,18 @@
                 
                 if(isset($_GET['action'])){
                     if($_GET['action']=="clef"){
-                        //mail($email, "ledestinataire", "objet", "la clef");
+                        
+                        // Please specify your Mail Server - Example: mail.example.com.
+                        ini_set("SMTP","ssl://smtp.gmail.com");
+                        
+                        // Please specify an SMTP Number 25 and 8889 are valid SMTP Ports.
+                        ini_set("smtp_port","465");
+                        ini_set("smtp_crypto","tls");
+
+                        // Please specify the return address to use
+                        ini_set('sendmail_from', 'lastennet.l@gmail.com');
+                        
+                        mail($_GET['email'], "Sujet", "Votre clef");
                         
                         update_key();
                     }
@@ -124,8 +160,5 @@
                 <p>© LLB 2013</p>
             </footer>
     </div> <!-- /jumbotron -->
-    <!--Bootstrap core JavaScript-->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
   </body>
 </html>

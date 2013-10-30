@@ -12,17 +12,55 @@ function connect(){
 }
 
 
+
+/* Tableau key
+ * 
+ * 
+ */
+function tab_key(){
+    
+    $os = $_POST['OS4'];// valeurs du select option pour l'affichage des clées dans le tableau
+    $select_tab_key = "SELECT `idKey`, `key`, `utilisee`, `name` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%'";
+    $result_tab_key = mysql_query($select_tab_key) or die("Erreur SQL Select_Tableau");
+    
+    echo "<div class='panel panel-default'>
+          <!-- Default panel contents -->
+          <div class='panel-heading'>Base de données</div>
+            <!-- Table -->
+            <table class='table'>
+                <th>idKey</th> <th>Key</th> <th>Utilisee</th> <th>Name</th> <th></th> <td><button type='button' href='importations.php?action=ajout' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-plus'></span></button></td>";
+
+                while ($row = mysql_fetch_array($result_tab_key))
+                    {
+                        list($idKey, $key, $utilisee, $name) = $row;
+                        echo "<tr>
+                                <td>$idKey</td>
+                                <td>$key</td>
+                                <td>$utilisee</td>
+                                <td>$name</td>
+                                <td><button type='button' href='importations.php?numero=$idKey&action=suppr' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-trash'></span></button></td>
+                                <td><button type='button' href='importations.php?numero=$idKey&action=modif' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-pencil'></span></button></td>
+                            </tr>"; 
+                    }
+            "</table>
+        </div>";
+}
+
+
+
 /* To select the key
  * 
  * Parameters : $produit is the name of the product
  */
 function select_key(){
     
-    $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clefs
+    $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clées
     $select_key = "SELECT `key` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = 0  LIMIT 0,6";
     $result_key = mysql_query($select_key) or die("Erreur SQL Select");
     return $result_key;
 }
+
+
 
 /* To insert the key
  * 
@@ -32,15 +70,16 @@ function add_key(){
     $os = $_POST['OS2'];// valeurs du select option de l'importation manuelle
     $insertion = $_POST['insertion'];// input texte de l'ajout manuelle d'une clé
     
-    $select_produit = "SELECT idProduct FROM Product WHERE name='$os';";
-    $result_produit = mysql_query($select_produit);
+    $select_produit = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$os%';";
+    $result_produit = mysql_query($select_produit) or die("Erreur SQL Select");
     $row = mysql_fetch_array($result_produit);
     $idProduit = $row['idProduct'];
     
     $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$insertion',$idProduit,false);";
-    $result_key = mysql_query($select_key) or die("Erreur SQL Insert");;
-    $row = mysql_fetch_array($result_key);
+    mysql_query($add_key) or die("Erreur SQL Insert");
 }
+
+
 
 /* To update the key
  * 
@@ -55,6 +94,8 @@ function update_key(){
     // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
 }
 
+
+
 /* To delete the key
  * 
  * Parameters : $idProduit is the id of the product, $cle is the key to search
@@ -64,10 +105,14 @@ function delete_key($cle, $idProduit){
     mysql_query($delete_key) or die("Erreur SQL Delete");;
 }
 
+
+
+////  FONCTION UTILISER POUR LE PARSAGE  ////
+
 /* Traitement de la balises ouvrantes
  * 
  * Appelée par le "parseur" 
- * Deux Parameters: l'identifiant du parseur, le nom de la balise ouvrante rencontrée.
+ * Two Parameters: l'identifiant du parseur, le nom de la balise ouvrante rencontrée.
  */
 function baliseOuvrante($parseur, $nomBalise){
     global $derniereBalise;
@@ -77,7 +122,7 @@ function baliseOuvrante($parseur, $nomBalise){
 /* Traitement de la balises fermantes
  *
  * Appelée par le "parseur" 
- * Deux Parameters: l'identifiant du parseur, le nom de la balise fermante rencontrée.
+ * Two Parameters: l'identifiant du parseur, le nom de la balise fermante rencontrée.
  */
 function baliseFermante($parseur, $nomBalise){
     global $derniereBalise;
@@ -101,6 +146,43 @@ function affichageTexte($parseur, $texte){
     }
 }
 
+/* Fonction PARSAGE XML, qui fait appel au prècédente fonction
+ * 
+ * 
+ */
+function parsingXML(){
+    $fichier = $_FILES['file']['tmp_name'];
+            
+    baliseOuvrante($parseur, $nomBalise);
+    baliseFermante($parseur, $nomBalise);
+    affichageTexte($parseur, $texte);
+
+    $parseurXML = xml_parser_create();// Création du parseur XML
+    xml_set_element_handler($parseurXML, "baliseOuvrante", "baliseFermante");// Indique la balise de début et de fin du fichier XML
+    xml_set_character_data_handler($parseurXML, "affichageTexte");// Indique le texte à récupérer entre les balises
+
+    $open = fopen($fichier, "r");// Ouverture du fichier en lecture
+    if (!$open) die("Impossible d'ouvrir le fichier XML");{
+    header('Location: importations.php?danger=1');}
+
+    while ( $ligneXML = fgets($open, 1024)){
+        xml_parse($parseurXML, $ligneXML) or die("Erreur XML");// Analyse le document XML ligne par ligne
+        header('Location: importations.php?danger=1');
+    }
+
+    xml_parser_free($parseurXML);// Met fin à l'analyse
+    fclose($open);// Fermeture du fichier
+    header('Location: importations.php?success=1');
+}
+
+////  FIN  ////
+
+
+
+/* Authentification MySQL
+ * 
+ * 
+ */
 function sessionConnexion(){
     
     $login = $_POST['login'];// input texte du login de connexion

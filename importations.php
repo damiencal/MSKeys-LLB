@@ -10,8 +10,15 @@
     <meta name="author" content="LLB">
     <link rel="shortcut icon" href="favicon.ico">
     <title>MSKeys LLB</title>
+    
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <!--<link href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/cosmo/bootstrap.min.css" rel="stylesheet">
+    
+    <!--Bootstrap core JavaScript-->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
   </head>
   <body>
     <? if (($_SESSION['login']) and ($_SESSION['password'])){
@@ -21,63 +28,46 @@
         connect();
         
         if(isset($_POST['submit_import'])){
-            
-            $fichier = $_FILES['file']['tmp_name'];
-            
-            baliseOuvrante($parseur, $nomBalise);
-            baliseFermante($parseur, $nomBalise);
-            affichageTexte($parseur, $texte);
-            
-            $parseurXML = xml_parser_create();// Création du parseur XML
-            xml_set_element_handler($parseurXML, "baliseOuvrante", "baliseFermante");// Indique la balise de début et de fin du fichier XML
-            xml_set_character_data_handler($parseurXML, "affichageTexte");// Indique le texte à récupérer entre les balises
-
-            $open = fopen($fichier, "r");// Ouverture du fichier en lecture
-            if (!$open) die("Impossible d'ouvrir le fichier XML");{
-            header('Location: importations.php?danger=1');}
-
-            while ( $ligneXML = fgets($open, 1024)){
-                xml_parse($parseurXML, $ligneXML) or die("Erreur XML");// Analyse le document XML ligne par ligne
-                header('Location: importations.php?danger=1');
-            }
-
-            xml_parser_free($parseurXML);// Met fin à l'analyse
-            fclose($open);// Fermeture du fichier
-            header('Location: importations.php?success=1');
-        }
-        
-        if(isset($_POST['ajout'])){
-            add_key();
-            header('Location: importations.php?success=2') or header('Location: importations.php?danger=2');
+            parsingXML();// Fonction de parsage XML, importations automatique des clées
         }
     ?>
     
+    
     <!-- MENU -->
     
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <a class="navbar-brand">MSKeys LLB</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand">MSKeys LLB</a>
         </div>
-        <div class="navbar-collapse collapse">
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="index.php">Accueil</a></li>
-                <li class="active" ><a href="#">Importations</a></li>
+                <li class="active" ><a href="importations.php">Importations</a></li>
             </ul>
             <form class="navbar-form navbar-right" role="form" action="index.php" method="post">
                 <input class="btn btn-warning" name="logout" type="submit" value="Déconnexion"></input>
             </form>
-        </div><!--/.navbar-collapse -->
-      </div>
-    </div>
-      
+        </div><!-- /.navbar-collapse -->
+    </nav>
+    
+    
+    
     <!-- IMPORTATIONS XML -->
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="container"><br><br><br><br>
         <div class="panel panel-default">
         <!-- Default panel contents -->
-            <div class="panel-heading">Importations</div>
+            <div class="panel-heading">Importations XML</div>
             <div class="panel-body">
             <form class="form-inline" role="form" enctype="multipart/form-data" method="post">
                 <div class="input-group">
@@ -95,47 +85,38 @@
             </div>
             <?
             if($_GET[success] == "1"){
-                ?><div class="alert alert-success">Importation réussi</div><?
-            } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div><? }
+                ?><div class="alert alert-success">Importation réussi</div>
+                    <script>window.location='importations.php'</script><?
+            } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div>
+                <script>window.location='importations.php'</script><? }
             ?>
         </div>
         
         
-        <!-- IMPORTATIONS MANUELLE -->
+        
+        <!-- GERER LES CLEES -->
         
         <div class="panel panel-default">
         <!-- Default panel contents -->
-            <div class="panel-heading">Importations manuelle</div>
+            <div class="panel-heading">Tableau de clefs</div>
             <div class="panel-body">
                 <form class="form-inline" role="form" method="post">
-                    <div class="col-lg-6">
-                        <div class="input-group">
-                            <div class="input-group-btn">
-                                <select class="btn btn-primary dropdown-toggle" name="OS2"> 
-                                    <option value="Windows 7 Professional" selected="selected">Windows 7</option>
-                                    <option value="Windows 8">Windows 8</option>
-                                    <option value="Windows Server 2008">Windows Server 2008</option>
-                                <select>
-                            </div>
-                            <input name="insertion" type="text" class="form-control">
-                            <span class="input-group-btn"><input name="submit_ajout" class="btn btn-primary" type="submit" value="Ajouter"></input></span>
-                        </div><!-- /input-group -->
-                    </div><!-- /.col-lg-6 -->
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <select class="btn btn-primary dropdown-toggle" name="OS4"> 
+                                <option value="Windows 7 Professional" selected="selected">Windows 7</option>
+                                <option value="Windows 8">Windows 8</option>
+                                <option value="Windows Server 2008">Windows Server 2008</option>
+                            <select>
+                            <input name="submit_tab" class="btn btn-primary" type="submit" value="Valider"></input>
+                        </div>
+                    </div><!-- /input-group -->
                 </form>
             </div>
-            <?
-            if($_GET[success] == "2"){
-                ?><div class="alert alert-success">Importation manuelle réussi</div><?
-            } elseif ($_GET[danger] == "2") { ?><div class="alert alert-danger">Importation manuelle echoué</div><? }
-            ?>
+            <?if(isset($_POST['submit_tab'])){
+                tab_key();// Fonction d'ajout manuelle d'une clée
+            }?>
         </div>
-    </div>
-    <footer>
-        <p>© LLB 2013</p>
-    </footer>
-    <!--Bootstrap core JavaScript-->
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <? } else {
         header("Location:index.php");
     } ?>
