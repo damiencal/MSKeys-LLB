@@ -100,8 +100,8 @@ function update_key(){
  * 
  * Parameters : $idProduit is the id of the product, $cle is the key to search
  */
-function delete_key($cle, $idProduit){
-    $delete_key = "DELETE * FROM keys WHERE key='$key';";
+function delete_key(){
+    $delete_key = "DELETE * FROM keys WHERE key='$idKey';";
     mysql_query($delete_key) or die("Erreur SQL Delete");;
 }
 
