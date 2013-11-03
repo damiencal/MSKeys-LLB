@@ -121,7 +121,4 @@
         header("Location:index.php");
     } ?>
   </body>
-  <footer>
-    <p>© LLB 2013</p>
-  </footer>
 </html>
