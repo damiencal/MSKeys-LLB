@@ -115,6 +115,18 @@
             </div>
             <?if(isset($_POST['submit_tab'])){
                 tab_key();// Fonction d'ajout manuelle d'une clée
+                
+                if(isset($_GET['action'])){
+                    if($_GET['action']=="action"){
+                        echo "action";
+                    }
+                    if($_GET['action']=="modif"){
+                        echo "modif";
+                    }
+                    if($_GET['action']=="suppr"){
+                        echo "suppr";
+                    }
+                }
             }?>
         </div>
     <? } else {

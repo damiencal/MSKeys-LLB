@@ -28,7 +28,7 @@ function tab_key(){
           <div class='panel-heading'>Base de données</div>
             <!-- Table -->
             <table class='table'>
-                <th>idKey</th> <th>Key</th> <th>Utilisee</th> <th>Name</th> <th></th> <td><button type='button' href='importations.php?action=ajout' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-plus'></span></button></td>";
+                <th>idKey</th> <th>Key</th> <th>Utilisee</th> <th>Name</th> <th></th> <td><a class='btn btn-default btn-lg' href='importations.php?action=ajout'><span class='glyphicon glyphicon-plus'></span></a></td>";
 
                 while ($row = mysql_fetch_array($result_tab_key))
                     {
@@ -38,8 +38,8 @@ function tab_key(){
                                 <td>$key</td>
                                 <td>$utilisee</td>
                                 <td>$name</td>
-                                <td><button type='button' href='importations.php?numero=$idKey&action=suppr' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-trash'></span></button></td>
-                                <td><button type='button' href='importations.php?numero=$idKey&action=modif' class='btn btn-default btn-lg'><span class='glyphicon glyphicon-pencil'></span></button></td>
+                                <td><a class='btn btn-default btn-lg' href='importations.php?numero=$idKey&action=suppr'><span class='glyphicon glyphicon-trash'></span></a></td>
+                                <td><a class='btn btn-default btn-lg' href='importations.php?numero=$idKey&action=suppr'><span class='glyphicon glyphicon-pencil'></span></a></td>
                             </tr>"; 
                     }
             "</table>

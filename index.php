@@ -130,6 +130,8 @@
                 if(isset($_GET['action'])){
                     if($_GET['action']=="clef"){
                         
+                        /*    EMAIL
+                         * 
                         // Please specify your Mail Server - Example: mail.example.com.
                         ini_set("SMTP","ssl://smtp.gmail.com");
                         
@@ -138,7 +140,7 @@
                         ini_set("smtp_crypto","tls");
 
                         // Please specify the return address to use
-                        ini_set('sendmail_from', 'lastennet.l@gmail.com');
+                        ini_set('sendmail_from', 'lastennet.l@gmail.com');*/
                         
                         mail($_GET['email'], "Sujet", "Votre clef");
                         
