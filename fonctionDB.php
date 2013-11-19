@@ -2,13 +2,9 @@
 
 // Connect to the database
 function connect(){
-    /*$hote = "10.22.50.188";
+    $hote = "10.22.50.188";
     $utilisateur = "mskeys";
-    $motdepasse = "mskeysAdmin";*/
-    
-    $hote = "localhost";
-    $utilisateur = "root";
-    $motdepasse = "3112";
+    $motdepasse = "mskeysAdmin";
   
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
     $nombdd="MSKeys";
