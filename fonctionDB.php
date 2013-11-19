@@ -2,9 +2,13 @@
 
 // Connect to the database
 function connect(){
-    $hote = "10.22.50.188";
+    /*$hote = "10.22.50.188";
     $utilisateur = "mskeys";
-    $motdepasse = "mskeysAdmin";
+    $motdepasse = "mskeysAdmin";*/
+    
+    $hote = "localhost";
+    $utilisateur = "root";
+    $motdepasse = "3112";
   
     $connexion=mysql_connect($hote, $utilisateur, $motdepasse);
     $nombdd="MSKeys";
@@ -13,7 +17,7 @@ function connect(){
 
 
 
-/* Tableau key
+/* Tableau des clées
  * 
  * 
  */
@@ -28,7 +32,7 @@ function tab_key(){
           <div class='panel-heading'>Base de données</div>
             <!-- Table -->
             <table class='table'>
-                <th>idKey</th> <th>Key</th> <th>Utilisee</th> <th>Name</th> <th></th> <td><a class='btn btn-default btn-lg' href='importations.php?action=ajout'><span class='glyphicon glyphicon-plus'></span></a></td>";
+                <th>idKey</th> <th>Key</th> <th>Utilisee</th> <th>Name</th> <th></th> <td><a class='btn btn-default btn-lg' href='formulaire.php?action=ajout'><span class='glyphicon glyphicon-plus'></span></a></td>";
 
                 while ($row = mysql_fetch_array($result_tab_key))
                     {
@@ -38,8 +42,8 @@ function tab_key(){
                                 <td>$key</td>
                                 <td>$utilisee</td>
                                 <td>$name</td>
-                                <td><a class='btn btn-default btn-lg' href='importations.php?numero=$idKey&action=suppr'><span class='glyphicon glyphicon-trash'></span></a></td>
-                                <td><a class='btn btn-default btn-lg' href='importations.php?numero=$idKey&action=suppr'><span class='glyphicon glyphicon-pencil'></span></a></td>
+                                <td><a class='btn btn-default btn-lg' href='importations.php?idKey=$idKey&action=suppr'><span class='glyphicon glyphicon-trash'></span></a></td>
+                                <td><a class='btn btn-default btn-lg' href='formulaire.php?idKey=$idKey&action=modif'><span class='glyphicon glyphicon-pencil'></span></a></td>
                             </tr>"; 
                     }
             "</table>
@@ -47,10 +51,30 @@ function tab_key(){
 }
 
 
+/* Execution des actions los du clic sur le bouton associer
+ * 
+ * 
+ */
+function action(){
+        
+    if($_GET['action']=="insert"){
+        add_key();
+    }
+
+    elseif($_GET['action']=="modif"){
+        update_key();
+    }
+
+    elseif($_GET['action']=="suppr"){
+        delete_key();
+    }
+}
+
 
 /* To select the key
  * 
  * Parameters : $produit is the name of the product
+ * Affichage des clées dans la page index.php
  */
 function select_key(){
     
@@ -61,7 +85,6 @@ function select_key(){
 }
 
 
-
 /* To insert the key
  * 
  * Parameters : $produit is the name of the product, $cle is the key to insert
@@ -70,15 +93,14 @@ function add_key(){
     $os = $_POST['OS2'];// valeurs du select option de l'importation manuelle
     $insertion = $_POST['insertion'];// input texte de l'ajout manuelle d'une clé
     
-    $select_produit = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$os%';";
+    $select_produit = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$os%'";
     $result_produit = mysql_query($select_produit) or die("Erreur SQL Select");
     $row = mysql_fetch_array($result_produit);
     $idProduit = $row['idProduct'];
     
-    $add_key = "INSERT INTO Keys (key,idProduct,utilisee) VALUES ('$insertion',$idProduit,false);";
+    $add_key = "INSERT INTO Keys (key,utilisee,idProduct) VALUES ('$insertion',0,'$idProduit')";
     mysql_query($add_key) or die("Erreur SQL Insert");
 }
-
 
 
 /* To update the key
@@ -88,12 +110,13 @@ function add_key(){
  */
 function update_key(){
     $idKey = $_GET['idKey'];
-
-    $update_key = "UPDATE `Keys` SET `utilisee` = '1' WHERE `Keys`.`idKey` = '$idKey'";
+    $product = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$_POST[name]%'";
+    mysql_query($product) or die("Erreur SQL Product");
+    
+    $update_key = "UPDATE `Keys` SET `key` = '$_POST[key]',`utilisee` = '$_POST[utilisee]', `name` = '$product' WHERE `Keys`.`idKey` = $idKey";
     mysql_query($update_key) or die("Erreur SQL Update");
     // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
 }
-
 
 
 /* To delete the key
@@ -101,9 +124,12 @@ function update_key(){
  * Parameters : $idProduit is the id of the product, $cle is the key to search
  */
 function delete_key(){
-    $delete_key = "DELETE * FROM keys WHERE key='$idKey';";
+    $idKey = $_GET['idKey'];
+    
+    $delete_key = "DELETE FROM `Keys` WHERE `idKey` = $idKey";
     mysql_query($delete_key) or die("Erreur SQL Delete");;
 }
+
 
 
 
@@ -176,6 +202,7 @@ function parsingXML(){
 }
 
 ////  FIN  ////
+
 
 
 

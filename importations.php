@@ -14,14 +14,13 @@
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
-    <!--<link href="//netdna.bootstrapcdn.com/bootswatch/3.0.0/cosmo/bootstrap.min.css" rel="stylesheet">
     
     <!--Bootstrap core JavaScript-->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </head>
   <body>
-    <? if (($_SESSION['login']) and ($_SESSION['password'])){
+    <?php if (($_SESSION['login']) and ($_SESSION['password'])){
        
         include "fonctionDB.php";
         
@@ -29,6 +28,10 @@
         
         if(isset($_POST['submit_import'])){
             parsingXML();// Fonction de parsage XML, importations automatique des clées
+        }
+        
+        if(isset($_GET['action'])){
+            action();// Fonction des différentes action pour le backup de la gestion des clés
         }
     ?>
     
@@ -83,15 +86,14 @@
                 </div>
             </form>
             </div>
-            <?
+            <?php
             if($_GET[success] == "1"){
                 ?><div class="alert alert-success">Importation réussi</div>
-                    <script>window.location='importations.php'</script><?
+                    <script>window.location='importations.php'</script><?php
             } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div>
-                <script>window.location='importations.php'</script><? }
+                <script>window.location='importations.php'</script><?php }
             ?>
-        </div>
-        
+        </div>        
         
         
         <!-- GERER LES CLEES -->
@@ -113,23 +115,11 @@
                     </div><!-- /input-group -->
                 </form>
             </div>
-            <?if(isset($_POST['submit_tab'])){
-                tab_key();// Fonction d'ajout manuelle d'une clée
-                
-                if(isset($_GET['action'])){
-                    if($_GET['action']=="action"){
-                        echo "action";
-                    }
-                    if($_GET['action']=="modif"){
-                        echo "modif";
-                    }
-                    if($_GET['action']=="suppr"){
-                        echo "suppr";
-                    }
-                }
+            <?php if(isset($_POST['submit_tab'])){
+                tab_key();// Fonction liste toutes les clées
             }?>
         </div>
-    <? } else {
+    <?php } else {
         header("Location:index.php");
     } ?>
   </body>
