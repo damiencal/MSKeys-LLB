@@ -61,7 +61,7 @@
                     <div class="form-group">
                     <input name="password" type="password" placeholder="Password" class="form-control">
                     </div>
-                    <input name="submit_session" type="submit" class="btn btn-success">Connexion</input>
+                    <input name="submit_session" type="submit" class="btn btn-success" value="Connexion"></input>
                 </form>
                 <?}?>
             </div><!--/.navbar-collapse -->
@@ -81,16 +81,12 @@
                     <select>
                     <input class="btn btn-info" type="submit" name="submit_option" value="Valider"></input>
                 </form></center><br>
-                <?if($_GET[success] == "1"){
-                    ?><div class="alert alert-success"><center>Réussi</center></div>
-                    <script>window.location='index.php'</script><?
-                }?>
             <? if ($_POST['submit_option']){
 
-                    $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clefs
-                    $result_key = mysql_query("SELECT * FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = '0'  LIMIT 0,6");
-                    $nbclef = mysql_query("SELECT * FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = '0'");
-                    $nb = mysql_num_rows($nbclef);
+                $os = $_POST['OS3'];// valeurs du select option pour l'affichage des clefs
+                $result_key = select_key_product($os);
+                $nbclef = select_key_limit($result_key, $os);
+                $nb = mysql_num_rows($nbclef);
 
                     if (mysql_num_rows($nbclef) != ""){
                         ?><form class="form-inline" role="form" method="get">
@@ -150,13 +146,13 @@
 
             else {
                 if($_GET[danger] == "1"){
-                    ?><div class="alert alert-danger">Veuillez réessayer l'authentification</div>
+                    ?><center><div class="alert alert-danger">Veuillez réessayer l'authentification</div></center>
         </div><?
             }
             else {?>
                 <div class="container">
                     <h1>Bienvenue</h1>
-                    <h3>Veuillez vous authentifier pour avoir accès au clé de Microsoft</h3>
+                    <h3>Veuillez vous authentifier pour avoir accès aux clés de Microsoft</h3>
                 </div><? 
             }
         }?>

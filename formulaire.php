@@ -70,10 +70,10 @@
                     echo "?idKey=$_GET[idKey]&action=modif";
                 }
             }
+            
             $extractKey = $_GET[idKey];
-            $select = "SELECT `idKey`, `key`, `utilisee`, `name` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE idKey=$extractKey";
-            $result = mysql_query($select) or die("Erreur SQL SELECT");
-            $row = mysql_fetch_array($result);
+            $result_select = select_key_formulaire($extractKey);
+            $row = mysql_fetch_array($result_select);
             list($idKey, $key, $utilisee, $name) = $row;
             
             $product = mysql_query("SELECT `name` FROM  `Product`");

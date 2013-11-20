@@ -88,10 +88,9 @@
             </div>
             <?php
             if($_GET[success] == "1"){
-                ?><div class="alert alert-success">Importation réussi</div>
-                    <script>window.location='importations.php'</script><?php
-            } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div>
-                <script>window.location='importations.php'</script><?php }
+                ?><div class="alert alert-success">Importation réussi</div><?php
+            } elseif ($_GET[danger] == "1") { ?><div class="alert alert-danger">Importation echoué</div><?php }
+              elseif ($_GET[danger] == "2") { ?><div class="alert alert-danger">Impossible d'ouvrir le fichier XML</div><?php }
             ?>
         </div>        
         
@@ -119,7 +118,12 @@
                 tab_key();// Fonction liste toutes les clées
             }?>
         </div>
-    <?php } else {
+        <?php if($_GET[action] == "suppr"){ ?><div class="alert alert-success"><center>Suppression Réussi</center></div>
+            <script>window.location='importations.php'</script><?php }
+        if($_POST["submit_modif"]){ ?><div class="alert alert-success"><center>Modification Réussi</center></div><?php }
+        if($_POST["submit_ajout"]){ ?><div class="alert alert-success"><center>Insertion Réussi</center></div><?php }
+    }
+    else {
         header("Location:index.php");
     } ?>
   </body>

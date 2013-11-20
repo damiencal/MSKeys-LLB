@@ -82,15 +82,28 @@ function select_key(){
     return $result_key;
 }
 
+function select_key_product($os){
+    $result_key = mysql_query("SELECT * FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = '0'  LIMIT 0,6");
+    return $result_key;
+}
+
+function select_key_limit($select_product, $os){
+    $nbclef = mysql_query("SELECT * FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE Product.name LIKE '$os%' AND utilisee = '0'");
+    return $nbclef;
+}
+
+function select_key_formulaire($extractKey){
+    $select = mysql_query("SELECT `idKey`, `key`, `utilisee`, `name` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE idKey=$extractKey");
+    return $select;
+}
+
 
 /* To insert the key
  * 
  * Parameters : $produit is the name of the product, $cle is the key to insert
  */
 function add_key($os,$insertion){
-    echo $os;
     $add_key = "INSERT INTO `Keys` (`key`, `utilisee`, `idProduct`) VALUES ('$insertion', 0, (SELECT `idProduct` FROM `Product` WHERE `name` = '$os'))";
-    echo $add_key;
     mysql_query($add_key) or die("Erreur SQL Insert");
 }
 
@@ -144,7 +157,7 @@ function baliseFermante($parseur, $nomBalise){
     $derniereBalise = "";
 }
 
-/* Traitement du texte
+/* Traitement du texte parser
  * 
  * Two Parameters: l'identifiant du parseur, le texte qu'il renvoit
  */
@@ -177,17 +190,18 @@ function parsingXML(){
     xml_set_character_data_handler($parseurXML, "affichageTexte");// Indique le texte à récupérer entre les balises
 
     $open = fopen($fichier, "r");// Ouverture du fichier en lecture
-    if (!$open) die("Impossible d'ouvrir le fichier XML");{
-    header('Location: importations.php?danger=1');}
+    if (!$open){ header('Location: importations.php?danger=1'); }
+    
+    else {
 
-    while ( $ligneXML = fgets($open, 1024)){
-        xml_parse($parseurXML, $ligneXML) or die("Erreur XML");// Analyse le document XML ligne par ligne
-        header('Location: importations.php?danger=1');
+        while ( $ligneXML = fgets($open, 1024)){
+            xml_parse($parseurXML, $ligneXML) or die(header('Location: importations.php?danger=2'));// Analyse le document XML ligne par ligne
+        }
+
+        xml_parser_free($parseurXML);// Met fin à l'analyse
+        fclose($open);// Fermeture du fichier
+        header('Location: importations.php?success=1');
     }
-
-    xml_parser_free($parseurXML);// Met fin à l'analyse
-    fclose($open);// Fermeture du fichier
-    header('Location: importations.php?success=1');
 }
 
 ////  FIN  ////
