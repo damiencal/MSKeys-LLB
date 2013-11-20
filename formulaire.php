@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand">MSKeys LLB</a>
+            <a class="navbar-brand" href="index.php">MSKeys LLB</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -80,7 +80,9 @@
             ?> action="importations.php" method="post">
                 <center><div class="input-group">
                     <h3>Clé</h3><input class="form-control" type="text" name="key" value="<?php if($_GET['action']=="modif") {echo "$key";} ?>"><br>
-                    <h3>Utilisée</h3><input class="form-control" type="text" name="utilisee" value="0<?php if ($_GET['action']=="modif") {echo "$utilisee";}?>"><br>
+                    <?php if ($_GET['action']=="modif") { ?>
+                        <h3>Utilisée</h3><input class="form-control" type="text" name="utilisee" value="<? echo "$utilisee";?>"><br>
+                    <? } ?>
                     <h3>Nom Produit</h3>
                     <select class="btn btn-primary dropdown-toggle" name="name">
                         <? while ($tab = mysql_fetch_array($product)){ ?>
