@@ -53,12 +53,14 @@ function tab_key(){
  */
 function action(){
         
-    if($_GET['action']=="insert"){
-        add_key();
+    if($_POST['submit_ajout']){
+        extract($_POST);
+        add_key($name,$key);
     }
 
-    elseif($_GET['action']=="modif"){
-        update_key();
+    elseif($_POST['submit_modif']){
+        extract($_POST);
+        update_key($name,$key,$utilisee,$old_key);
     }
 
     elseif($_GET['action']=="suppr"){
@@ -85,16 +87,10 @@ function select_key(){
  * 
  * Parameters : $produit is the name of the product, $cle is the key to insert
  */
-function add_key(){
-    $os = $_POST['OS2'];// valeurs du select option de l'importation manuelle
-    $insertion = $_POST['insertion'];// input texte de l'ajout manuelle d'une clé
-    
-    $select_produit = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$os%'";
-    $result_produit = mysql_query($select_produit) or die("Erreur SQL Select");
-    $row = mysql_fetch_array($result_produit);
-    $idProduit = $row['idProduct'];
-    
-    $add_key = "INSERT INTO Keys (key,utilisee,idProduct) VALUES ('$insertion',0,'$idProduit')";
+function add_key($os,$insertion){
+    echo $os;
+    $add_key = "INSERT INTO `Keys` (`key`, `utilisee`, `idProduct`) VALUES ('$insertion', 0, (SELECT `idProduct` FROM `Product` WHERE `name` = '$os'))";
+    echo $add_key;
     mysql_query($add_key) or die("Erreur SQL Insert");
 }
 
@@ -104,12 +100,9 @@ function add_key(){
  * Parameters : $idProduit is id of the product, $cle is the key to insert
  *              $utilisee is a bolean for know key that use, $key is the key to search
  */
-function update_key(){
-    $idKey = $_GET['idKey'];
-    $product = "SELECT `idProduct` FROM `Product` WHERE `name` LIKE '$_POST[name]%'";
-    mysql_query($product) or die("Erreur SQL Product");
-    
-    $update_key = "UPDATE `Keys` SET `key` = '$_POST[key]',`utilisee` = '$_POST[utilisee]', `name` = '$product' WHERE `Keys`.`idKey` = $idKey";
+function update_key($os, $insertion, $modif, $ancienne_cle){
+    $update_key = "UPDATE `Keys` SET `key` = '$insertion', `utilisee` = $modif, `idProduct` = (SELECT `idProduct` FROM `Product` WHERE `name` = '$os') WHERE `Keys`.`idKey` = $ancienne_cle";
+    echo $update_key;
     mysql_query($update_key) or die("Erreur SQL Update");
     // Met à jour la base de donnée si le bouton est cliquer, la clé est utilisee et ne sera plus jamais afficher
 }

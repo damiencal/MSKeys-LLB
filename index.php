@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.php">MSKeys LLB</a>
+                <a class="navbar-brand">MSKeys LLB</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -72,7 +72,7 @@
     <div class="jumbotron">
         <div class="container">
             <?if (($_SESSION['login']) AND ($_SESSION['password'])){ ?>
-                <center><br><h3>Veuillez faire une recherche en fonction de la clef du Système d'Exploitation</h3>
+                <center><h3>Veuillez faire une recherche en fonction de la clef du Système d'Exploitation</h3>
                 <form class="form-inline" role="form" method="post">
                     <select class="btn btn-info dropdown-toggle" name="OS3"> 
                         <option value="Windows 7 Professional" selected="selected">Windows 7</option>

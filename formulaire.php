@@ -38,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.php">MSKeys LLB</a>
+            <a class="navbar-brand">MSKeys LLB</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -62,34 +62,34 @@
             <form class="form-inline" role="form"
             <?php
             
-            $select = "SELECT `idKey`, `key`, `utilisee`, `name` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct";
-            $result = mysql_query($select) or die("Erreur SQL SELECT");
-            $row = mysql_fetch_array($result);
-            list($idKey, $key, $utilisee, $name) = $row;
-            
-            $product = mysql_query("SELECT `name` FROM  `Product`");
-
             if(isset($_GET['action'])){
                 if($_GET['action']=="insert"){
                     echo "?action=insert";
                 }
                 if($_GET['action']=="modif"){
-                    echo "?numero=$_GET[numero]&action=modif";
+                    echo "?idKey=$_GET[idKey]&action=modif";
                 }
             }
+            $extractKey = $_GET[idKey];
+            $select = "SELECT `idKey`, `key`, `utilisee`, `name` FROM `Keys` INNER JOIN Product ON Keys.idProduct = Product.idProduct WHERE idKey=$extractKey";
+            $result = mysql_query($select) or die("Erreur SQL SELECT");
+            $row = mysql_fetch_array($result);
+            list($idKey, $key, $utilisee, $name) = $row;
+            
+            $product = mysql_query("SELECT `name` FROM  `Product`");
+            
             ?> action="importations.php" method="post">
                 <center><div class="input-group">
+                    <input class="form-control" type="hidden" name="old_key" value="<?php if($_GET['action']=="modif") {echo "$idKey";} ?>">
                     <h3>Clé</h3><input class="form-control" type="text" name="key" value="<?php if($_GET['action']=="modif") {echo "$key";} ?>"><br>
-                    <?php if ($_GET['action']=="modif") { ?>
-                        <h3>Utilisée</h3><input class="form-control" type="text" name="utilisee" value="<? echo "$utilisee";?>"><br>
-                    <? } ?>
+                    <?php if($_GET['action']=="modif") { ?> <h3>Utilisée</h3><input class="form-control" type="text" name="utilisee" value="<? echo $utilisee ?>"><br><? } ?>
                     <h3>Nom Produit</h3>
                     <select class="btn btn-primary dropdown-toggle" name="name">
                         <? while ($tab = mysql_fetch_array($product)){ ?>
-                            <option value="<?php if ($_GET['action']=="modif") {echo "$tab[name]";}?>"><?echo "$tab[name]"?></option>
+                            <option name="option" value="<? echo "$tab[name]"?>"><? echo "$tab[name]" ?></option>
                         <? } ?>
                     </select><br><br>
-                    <input class="btn btn-primary" type="submit" value="Valider">
+                    <input class="btn btn-primary" name="<? if ($_GET['action']=="modif") {echo "submit_modif";} else {echo "submit_ajout";} ?>" type="submit" value="Valider">
                 </div></center><!-- /input-group -->
             </form>
         </div>

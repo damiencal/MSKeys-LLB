@@ -30,7 +30,7 @@
             parsingXML();// Fonction de parsage XML, importations automatique des clées
         }
         
-        if(isset($_GET['action'])){
+        if(isset($_GET['action']) || isset($_POST['submit_ajout']) || isset($_POST['submit_modif'])){
             action();// Fonction des différentes action pour le backup de la gestion des clés
         }
     ?>
@@ -47,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.php">MSKeys LLB</a>
+            <a class="navbar-brand">MSKeys LLB</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
